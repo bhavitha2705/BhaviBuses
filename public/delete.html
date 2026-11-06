@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Delete Bus Details</title>
+</head>
+<body>
+
+    <h2>Delete Bus Details</h2>
+
+    <label>Bus ID:</label>
+    <input type="number" id="bus_id" placeholder="Enter Bus ID">
+    <br><br>
+
+    <button onclick="deleteBus()">Delete Bus</button>
+
+    <p id="result"></p>
+
+    <script>
+        function deleteBus() {
+            const bus_id = document.getElementById("bus_id").value;
+
+            if (bus_id === "") {
+                alert("Please enter Bus ID");
+                return;
+            }
+
+            fetch("/buses/" + bus_id, {
+                method: "DELETE"
+            })
+            .then(async response => {
+                const message = await response.text();
+
+                if (!response.ok) {
+                    throw new Error(message);
+                }
+
+                return message;
+            })
+            .then(message => {
+                document.getElementById("result").innerHTML = message;
+            })
+            .catch(error => {
+                document.getElementById("result").innerHTML = error.message;
+            });
+        }
+    </script>
+
+</body>
+</html>

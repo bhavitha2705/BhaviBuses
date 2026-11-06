@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Bus Management</title>
+</head>
+<body>
+
+    <h2>Bus Details</h2>
+
+    <button onclick="getBuses()">View All Buses</button>
+
+    <br><br>
+
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>Bus ID</th>
+                <th>Bus No</th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Departure Time</th>
+                <th>Total Seats</th>
+            </tr>
+        </thead>
+
+        <tbody id="busTable"></tbody>
+    </table>
+
+    <p id="result"></p>
+
+    <script>
+        function getBuses() {
+            fetch("/buses")
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById("busTable");
+                table.innerHTML = "";
+
+                data.forEach(bus => {
+                    const row = `
+                        <tr>
+                            <td>${bus.bus_id}</td>
+                            <td>${bus.bus_no}</td>
+                            <td>${bus.source}</td>
+                            <td>${bus.destination}</td>
+                            <td>${bus.departure_time}</td>
+                            <td>${bus.total_seats}</td>
+                        </tr>
+                    `;
+
+                    table.innerHTML += row;
+                });
+
+                document.getElementById("result").innerHTML =
+                    data.length === 0 ? "No buses found" : "";
+            })
+            .catch(error => {
+                document.getElementById("result").innerHTML =
+                    "Error loading bus details";
+            });
+        }
+    </script>
+
+</body>
+</html>

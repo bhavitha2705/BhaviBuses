@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Insert Bus Details</title>
+</head>
+<link rel="stylesheet" href="style.css">
+<body>
+
+    <h2>Insert Bus Details</h2>
+
+    <label>Bus ID:</label>
+    <input type="number" id="bus_id" placeholder="Enter Bus ID">
+    <br><br>
+
+    <label>Bus No:</label>
+    <input type="text" id="bus_no" placeholder="Enter Bus Number">
+    <br><br>
+
+    <label>Source:</label>
+    <input type="text" id="source" placeholder="Enter Source">
+    <br><br>
+
+    <label>Destination:</label>
+    <input type="text" id="destination" placeholder="Enter Destination">
+    <br><br>
+
+    <label>Departure Time:</label>
+    <input type="time" id="departure_time">
+    <br><br>
+
+    <label>Total Seats:</label>
+    <input type="number" id="total_seats" placeholder="Enter Total Seats">
+    <br><br>
+
+    <button onclick="insertBus()">Insert Bus</button>
+
+    <p id="result"></p>
+
+    <script>
+        function insertBus() {
+            const bus = {
+                bus_id: document.getElementById("bus_id").value,
+                bus_no: document.getElementById("bus_no").value,
+                source: document.getElementById("source").value,
+                destination: document.getElementById("destination").value,
+                departure_time: document.getElementById("departure_time").value,
+                total_seats: document.getElementById("total_seats").value
+            };
+
+            if (
+                !bus.bus_id ||
+                !bus.bus_no ||
+                !bus.source ||
+                !bus.destination ||
+                !bus.departure_time ||
+                !bus.total_seats
+            ) {
+                alert("Please fill all fields");
+                return;
+            }
+
+            fetch("/buses", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(bus)
+            })
+            .then(async response => {
+                const message = await response.text();
+
+                if (!response.ok) {
+                    throw new Error(message);
+                }
+
+                return message;
+            })
+            .then(message => {
+                document.getElementById("result").innerHTML = message;
+            })
+            .catch(error => {
+                document.getElementById("result").innerHTML =
+                    "Error: " + error.message;
+            });
+        }
+    </script>
+
+</body>
+</html>

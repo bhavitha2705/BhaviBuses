@@ -1,0 +1,108 @@
+
+<!-- UPDATE BUS DETAILS -->
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Update Bus</title>
+</head>
+<body>
+
+<h1>UPDATE BUS</h1>
+<hr>
+
+<a href="index.html">Home</a> |
+<a href="list.html">List Buses</a> |
+<a href="listone.html">List Required Bus</a> |
+<a href="insert.html">Insert Bus</a> |
+<a href="update.html">Update Bus</a> |
+<a href="delete.html">Delete Bus</a>
+
+<hr>
+
+Bus ID
+<input type="number" id="bus_id">
+<br><br>
+
+Bus Number
+<input type="text" id="bus_no">
+<br><br>
+
+Source
+<input type="text" id="source">
+<br><br>
+
+Destination
+<input type="text" id="destination">
+<br><br>
+
+Departure Time
+<input type="time" id="departure_time">
+<br><br>
+
+Total Seats
+<input type="number" id="total_seats">
+<br><br>
+
+<button onclick="updateBus()">Update</button>
+
+<br><br>
+
+<button onclick="location.href='index.html'">Home Page</button>
+
+<script>
+function updateBus()
+{
+    let bus_id = document.getElementById("bus_id").value;
+    let bus_no = document.getElementById("bus_no").value;
+    let source = document.getElementById("source").value;
+    let destination = document.getElementById("destination").value;
+    let departure_time = document.getElementById("departure_time").value;
+    let total_seats = document.getElementById("total_seats").value;
+
+    if (
+        bus_id === "" ||
+        bus_no === "" ||
+        source === "" ||
+        destination === "" ||
+        departure_time === "" ||
+        total_seats === ""
+    ) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    fetch("/buses/" + bus_id, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            bus_no: bus_no,
+            source: source,
+            destination: destination,
+            departure_time: departure_time,
+            total_seats: total_seats
+        })
+    })
+    .then(response => {
+        if (response.ok)
+            return response.text();
+
+        return response.text().then(message => {
+            throw new Error(message);
+        });
+    })
+    .then(message => {
+        alert(message);
+        location.href = "index.html";
+    })
+    .catch(error => {
+        alert(error.message);
+    });
+
+}
+</script>
+
+</body>
+</html>
